@@ -9,7 +9,8 @@ import {
   } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
-import trashIcon from '../assets/icons/trash/trash.png'
+import editIcon from '../assets/icons/edit/edit.png';
+import trashIcon from '../assets/icons/trash/trash.png';
 import { EditTaskArgs } from '../pages/Home';
 import { Task } from './TasksList';
 
@@ -50,8 +51,8 @@ export function TaskItem({ task, editTask, removeTask, toggleTaskDone }: TasksIt
       }, [isEditing])
 
     return (
-    <View>
-        <View>
+    <View style={styles.container}>
+        <View style={styles.infoContainer}>
             <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.taskButton}
@@ -79,22 +80,37 @@ export function TaskItem({ task, editTask, removeTask, toggleTaskDone }: TasksIt
             </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-              style={{ paddingHorizontal: 24 }}
-              onPress={() => removeTask(task.id)}
+        <View style={ styles.iconsContainer }>
+            { isEditing ? (
+                    <TouchableOpacity
+                        onPress={handleCancelEditing}
+                    >
+                        <Icon name="x" size={24} color="#b2b2b2" />
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity
+                        onPress={handleStartEditing}
+                    >
+                        <Image source={editIcon} />
+                    </TouchableOpacity>
+                )
+            }
+            <View style={ styles.iconsDivider } />
+            <TouchableOpacity
+                disabled={isEditing}
+                onPress={() => removeTask(task.id)}
             >
-              <Image source={trashIcon} />
-        </TouchableOpacity>
+                <Image source={trashIcon} style={{ opacity: isEditing ? 0.2 : 1 }} />
+            </TouchableOpacity>
+        </View>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
     taskButton: {
       flex: 1,
       paddingHorizontal: 24,
-      paddingVertical: 15,
       marginBottom: 4,
       borderRadius: 4,
       flexDirection: 'row',
@@ -127,5 +143,26 @@ const styles = StyleSheet.create({
       color: '#1DB863',
       textDecorationLine: 'line-through',
       fontFamily: 'Inter-Medium'
+    },
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    infoContainer: {
+        flex: 1,
+    },
+    iconsContainer:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingLeft: 12,
+        paddingRight: 24
+    },
+    iconsDivider:{
+        width: 1,
+        height: 24,
+        backgroundColor: 'rgba(196, 196, 196, 0.24)',
+        marginHorizontal: 12
     }
   })
